@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SpreadSearch - Professional Options Bid-Ask Spread Scanner</title>
+    <meta name="description" content="Discover profitable bid-ask spread opportunities in options markets. Professional analytics platform for traders and market efficiency research.">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+            --font-mono: 'JetBrains Mono', 'Monaco', 'Courier New', monospace;
+            
+            --space-1: 0.25rem;
+            --space-2: 0.5rem;
+            --space-3: 0.75rem;
+            --space-4: 1rem;
+            --space-5: 1.5rem;
+            --space-6: 2rem;
+            --space-8: 3rem;
+            --space-12: 5rem;
+            
+            --radius-sm: 6px;
+            --radius-md: 8px;
+            --radius-lg: 12px;
+        }
+        
+        [data-theme="light"] {
+            --bg-base: #ffffff;
+            --bg-elevated: #f8f9fa;
+            --bg-overlay: rgba(0, 0, 0, 0.5);
+            --text-primary: #1a1a1a;
+            --text-secondary: #4a4a4a;
+            --text-muted: #6b7280;
+            --border: #e5e7eb;
+            --border-hover: #d1d5db;
+            --primary: #0066ff;
+            --primary-hover: #0052cc;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+        }
+        
+        [data-theme="dark"] {
+            --bg-base: #0a0a0a;
+            --bg-elevated: #1a1a1a;
+            --bg-overlay: rgba(0, 0, 0, 0.8);
+            --text-primary: #ffffff;
+            --text-secondary: #e5e7eb;
+            --text-muted: #9ca3af;
+            --border: #2a2a2a;
+            --border-hover: #3a3a3a;
+            --primary: #3b82f6;
+            --primary-hover: #2563eb;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: var(--font-sans);
+            background: var(--bg-base);
+            color: var(--text-primary);
+            line-height: 1.6;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 var(--space-6);
+        }
+        
+        /* Header */
+        .header {
+            background: var(--bg-base);
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+        }
+        
+        .header-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: var(--space-4) 0;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: var(--space-3);
+            text-decoration: none;
+            color: var(--text-primary);
+        }
+        
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--primary);
+            color: white;
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1rem;
+        }
+        
+        .logo-text {
+            font-size: 1.25rem;
+            font-weight: 700;
+        }
+        
+        .header-nav {
+            display: flex;
+            gap: var(--space-6);
+        }
+        
+        .nav-item {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.9375rem;
+            transition: color 0.2s;
+        }
+        
+        .nav-item:hover {
+            color: var(--primary);
+        }
+        
+        /* Hero Section */
+        .hero {
+            padding: var(--space-12) 0 var(--space-8);
+            text-align: center;
+        }
+        
+        .hero-title {
+            font-size: 3.5rem;
+            font-weight: 700;
+            line-height: 1.1;
+            margin-bottom: var(--space-5);
+            background: linear-gradient(135deg, var(--text-primary) 0%, var(--primary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .hero-subtitle {
+            font-size: 1.25rem;
+            color: var(--text-secondary);
+            max-width: 700px;
+            margin: 0 auto var(--space-8);
+            line-height: 1.8;
+        }
+        
+        .hero-cta {
+            display: flex;
+            gap: var(--space-4);
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .btn {
+            padding: var(--space-4) var(--space-6);
+            font-size: 1rem;
+            font-weight: 600;
+            border-radius: var(--radius-md);
+            text-decoration: none;
+            transition: all 0.2s;
+            cursor: pointer;
+            border: none;
+            display: inline-block;
+        }
+        
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: var(--primary-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(0, 102, 255, 0.2);
+        }
+        
+        .btn-secondary {
+            background: transparent;
+            color: var(--text-primary);
+            border: 2px solid var(--border);
+        }
+        
+        .btn-secondary:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+        
+        /* Features */
+        .features {
+            padding: var(--space-12) 0;
+            background: var(--bg-elevated);
+        }
+        
+        .section-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: var(--space-3);
+        }
+        
+        .section-subtitle {
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 1.125rem;
+            margin-bottom: var(--space-8);
+        }
+        
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: var(--space-6);
+        }
+        
+        .feature-card {
+            background: var(--bg-base);
+            padding: var(--space-6);
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--border);
+        }
+        
+        .feature-icon {
+            font-size: 2.5rem;
+            margin-bottom: var(--space-4);
+        }
+        
+        .feature-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: var(--space-3);
+        }
+        
+        .feature-description {
+            color: var(--text-muted);
+            line-height: 1.7;
+        }
+        
+        /* How It Works */
+        .how-it-works {
+            padding: var(--space-12) 0;
+        }
+        
+        .steps-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: var(--space-8);
+            margin-top: var(--space-8);
+        }
+        
+        .step {
+            text-align: center;
+        }
+        
+        .step-number {
+            width: 60px;
+            height: 60px;
+            background: var(--primary);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin: 0 auto var(--space-4);
+        }
+        
+        .step-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: var(--space-3);
+        }
+        
+        .step-description {
+            color: var(--text-muted);
+        }
+        
+        /* Mission */
+        .mission {
+            padding: var(--space-12) 0;
+            background: var(--bg-elevated);
+        }
+        
+        .mission-content {
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+        }
+        
+        .mission-text {
+            font-size: 1.125rem;
+            line-height: 1.8;
+            color: var(--text-secondary);
+            margin-bottom: var(--space-6);
+        }
+        
+        .pillars {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: var(--space-6);
+            margin-top: var(--space-8);
+        }
+        
+        .pillar {
+            text-align: center;
+        }
+        
+        .pillar-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+            margin-bottom: var(--space-2);
+            color: var(--primary);
+        }
+        
+        .pillar-description {
+            font-size: 0.9375rem;
+            color: var(--text-muted);
+        }
+        
+        /* Footer */
+        .footer {
+            padding: var(--space-8) 0;
+            border-top: 1px solid var(--border);
+        }
+        
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .footer-text {
+            color: var(--text-muted);
+            font-size: 0.875rem;
+        }
+        
+        .footer-links {
+            display: flex;
+            gap: var(--space-6);
+        }
+        
+        .footer-link {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.875rem;
+        }
+        
+        .footer-link:hover {
+            color: var(--primary);
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <a href="/" class="logo">
+                    <div class="logo-icon">SS</div>
+                    <div class="logo-text">SpreadSearch</div>
+                </a>
+                
+                <nav class="header-nav">
+                    <a class="nav-item" href="/demo.html">Demo</a>
+                    <a class="nav-item" href="/how-it-works.html">How It Works</a>
+                    <a class="nav-item" href="/pricing.html">Pricing</a>
+                    <a class="nav-item" href="/download.html">Download</a>
+                    <a class="nav-item" href="/about.html">About</a>
+                </nav>
+            </div>
+        </div>
+    </header>
+    
+    <main>
+        <!-- Hero Section -->
+        <section class="hero">
+            <div class="container">
+                <h1 class="hero-title">Find Profitable Spreads.<br>Improve Market Efficiency.</h1>
+                <p class="hero-subtitle">Professional options analytics platform that identifies bid-ask spread opportunities while contributing to more efficient markets.</p>
+                <div class="hero-cta">
+                    <a href="/demo.html" class="btn btn-primary">Try Demo</a>
+                    <a href="/download.html" class="btn btn-secondary">Download App</a>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Features -->
+        <section class="features">
+            <div class="container">
+                <h2 class="section-title">Powerful Features</h2>
+                <p class="section-subtitle">Everything you need to find and analyze spread opportunities</p>
+                
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon">⚡</div>
+                        <h3 class="feature-title">Real-Time Scanning</h3>
+                        <p class="feature-description">Scan multiple tickers simultaneously across various expiration dates and strike ranges to identify widening spreads.</p>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <div class="feature-icon">📊</div>
+                        <h3 class="feature-title">Advanced Analytics</h3>
+                        <p class="feature-description">Full Greeks analysis (Delta, Gamma, Theta, Vega), volume, open interest, and implied volatility for informed decisions.</p>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <div class="feature-icon">🔔</div>
+                        <h3 class="feature-title">Smart Alerts</h3>
+                        <p class="feature-description">Get notified when spreads exceed your thresholds. Configure alerts for specific criteria and receive real-time notifications.</p>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <div class="feature-icon">🎯</div>
+                        <h3 class="feature-title">Precision Filters</h3>
+                        <p class="feature-description">Filter by minimum spread percentage, dollar amount, volume, open interest, and option type to find exactly what you're looking for.</p>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <div class="feature-icon">📈</div>
+                        <h3 class="feature-title">Research Tools</h3>
+                        <p class="feature-description">Export historical data, analyze spread patterns, and contribute to market microstructure research.</p>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <div class="feature-icon">🔒</div>
+                        <h3 class="feature-title">Your Data</h3>
+                        <p class="feature-description">Connect to your own Interactive Brokers account. We never touch your money or execute trades.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- How It Works -->
+        <section class="how-it-works">
+            <div class="container">
+                <h2 class="section-title">How It Works</h2>
+                <p class="section-subtitle">Three simple steps to start finding opportunities</p>
+                
+                <div class="steps-grid">
+                    <div class="step">
+                        <div class="step-number">1</div>
+                        <h3 class="step-title">Configure Your Scan</h3>
+                        <p class="step-description">Select tickers, expiration ranges, strike ranges, and set your filters for spread percentage, volume, and open interest.</p>
+                    </div>
+                    
+                    <div class="step">
+                        <div class="step-number">2</div>
+                        <h3 class="step-title">Analyze Results</h3>
+                        <p class="step-description">Review detected opportunities with full Greeks analysis, volume data, and spread metrics. Sort and filter to find the best setups.</p>
+                    </div>
+                    
+                    <div class="step">
+                        <div class="step-number">3</div>
+                        <h3 class="step-title">Execute in Your Broker</h3>
+                        <p class="step-description">Copy trade details to your clipboard and execute manually in your own broker. We provide analysis, you control execution.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Mission -->
+        <section class="mission">
+            <div class="container">
+                <div class="mission-content">
+                    <h2 class="section-title">More Than Just Trading</h2>
+                    <p class="mission-text">SpreadSearch is built on three core pillars: helping traders find profitable opportunities, contributing to market efficiency by closing abnormal spreads, and advancing research in market microstructure.</p>
+                    
+                    <div class="pillars">
+                        <div class="pillar">
+                            <h3 class="pillar-title">Trading</h3>
+                            <p class="pillar-description">Find and execute profitable bid-ask spread opportunities</p>
+                        </div>
+                        
+                        <div class="pillar">
+                            <h3 class="pillar-title">Market Efficiency</h3>
+                            <p class="pillar-description">Help close abnormal spreads and improve market function</p>
+                        </div>
+                        
+                        <div class="pillar">
+                            <h3 class="pillar-title">Research</h3>
+                            <p class="pillar-description">Study spread formation patterns and market behavior</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- CTA -->
+        <section class="hero" style="padding: var(--space-8) 0;">
+            <div class="container">
+                <h2 class="section-title">Ready to Get Started?</h2>
+                <p class="hero-subtitle">Try the demo with sample data or download the desktop app to connect your broker.</p>
+                <div class="hero-cta">
+                    <a href="/demo.html" class="btn btn-primary">Try Demo Now</a>
+                    <a href="/pricing.html" class="btn btn-secondary">View Pricing</a>
+                </div>
+            </div>
+        </section>
+    </main>
+    
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-text">© 2026 SpreadSearch. All rights reserved.</div>
+                <div class="footer-links">
+                    <a href="/about.html" class="footer-link">About</a>
+                    <a href="/how-it-works.html" class="footer-link">How It Works</a>
+                    <a href="/pricing.html" class="footer-link">Pricing</a>
+                    <a href="mailto:contact@spreadsearch.com" class="footer-link">Contact</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>
